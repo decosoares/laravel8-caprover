@@ -46,7 +46,7 @@ RUN rm -rf /home/$NON_ROOT_USER/.composer
 COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
 RUN find $LARAVEL_PATH -type f -exec chmod 644 {} \;
 RUN find $LARAVEL_PATH -type d -exec chmod 755 {} \;
-RUN chgrp -R www-data $LARAVEL_PATH/storage $LARAVEL_PATH/bootstrap/cache
+RUN chgrp -R $NON_ROOT_USER $LARAVEL_PATH/storage $LARAVEL_PATH/bootstrap/cache
 RUN chmod -R ug+rwx $LARAVEL_PATH/storage $LARAVEL_PATH/bootstrap/cache
 COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
