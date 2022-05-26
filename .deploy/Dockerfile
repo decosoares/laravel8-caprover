@@ -44,7 +44,6 @@ RUN rm -rf /home/$NON_ROOT_USER/.composer
 
 # Copy app
 COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
-RUN chown -R $NON_ROOT_USER:www-data $LARAVEL_PATH
 RUN find $LARAVEL_PATH -type f -exec chmod 644 {} \;
 RUN find $LARAVEL_PATH -type d -exec chmod 755 {} \;
 RUN chgrp -R www-data $LARAVEL_PATH/storage $LARAVEL_PATH/bootstrap/cache
