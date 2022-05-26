@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:7.4-alpine
+FROM webdevops/php-nginx:8.0-alpine
 
 # Install Laravel framework system requirements (https://laravel.com/docs/8.x/deployment#optimizing-configuration-loading)
 RUN apk add oniguruma-dev postgresql-dev libxml2-dev
@@ -19,7 +19,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV WEB_DOCUMENT_ROOT /app/public
 ENV APP_ENV production
 WORKDIR /app
-COPY . .
+COPY ../. .
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 # Optimizing Configuration loading
