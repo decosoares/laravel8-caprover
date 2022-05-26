@@ -44,6 +44,8 @@ RUN rm -rf /home/$NON_ROOT_USER/.composer
 
 # Copy app
 COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
+RUN find $LARAVEL_PATH/ -type f -exec chmod 644 {} \;
+find $LARAVEL_PATH/ -type d -exec chmod 755 {} \;
 COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Set any ENVs
