@@ -1,31 +1,59 @@
-FROM webdevops/php-nginx:8.0-alpine
+ARG PHP_VERSION=${PHP_VERSION:-8.0}
+FROM php:${PHP_VERSION}-fpm-alpine AS php-system-setup
 
-# Install Laravel framework system requirements (https://laravel.com/docs/8.x/deployment#optimizing-configuration-loading)
-RUN apk add oniguruma-dev postgresql-dev libxml2-dev
+# Install system dependencies
+RUN apk add --no-cache dcron busybox-suid libcap curl zip unzip git
+
+# Install PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 RUN install-php-extensions intl bcmath gd pdo_mysql pdo_pgsql opcache redis uuid exif pcntl zip
 
-# Copy Composer binary from the Composer official Docker image
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install supervisord implementation
+COPY --from=ochinchina/supervisord:latest /usr/local/bin/supervisord /usr/local/bin/supervisord
 
-USER application
-ENV WEB_DOCUMENT_ROOT /app/public
-ENV APP_ENV production
-WORKDIR /app
-COPY --chown=application:application . .
+# Install caddy
+COPY --from=caddy:2.2.1 /usr/bin/caddy /usr/local/bin/caddy
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy
 
-#Ajuste de permissões
-USER root
-RUN usermod -a -G www-data application
-#RUN chown -R www-data:www-data /app
-RUN find /app -type f -exec chmod 644 '{}' \;
-RUN find /app -type d -exec chmod 755 '{}' \;
-RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
+# Install composer
+COPY --from=composer/composer:2 /usr/bin/composer /usr/local/bin/composer
 
-USER application
+FROM php-system-setup AS app-setup
 
+# Set working directory
+ENV LARAVEL_PATH=/srv/app
+WORKDIR $LARAVEL_PATH
+
+# Add non-root user: 'app'
+ARG NON_ROOT_GROUP=${NON_ROOT_GROUP:-app}
+ARG NON_ROOT_USER=${NON_ROOT_USER:-app}
+RUN addgroup -S $NON_ROOT_GROUP && adduser -S $NON_ROOT_USER -G $NON_ROOT_GROUP
+RUN addgroup $NON_ROOT_USER wheel
+
+# Set cron job
+COPY ./.deploy/config/crontab /etc/crontabs/$NON_ROOT_USER
+RUN chmod 777 /usr/sbin/crond
+RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP /etc/crontabs/$NON_ROOT_USER && setcap cap_setgid=ep /usr/sbin/crond
+
+# Switch to non-root 'app' user & install app dependencies
+COPY composer.json composer.lock ./
+RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP $LARAVEL_PATH
+USER $NON_ROOT_USER
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
+RUN rm -rf /home/$NON_ROOT_USER/.composer
+
+# Copy app
+COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . .
+RUN find $LARAVEL_PATH -type f -exec chmod 644 {} \;
+RUN find $LARAVEL_PATH -type d -exec chmod 755 {} \;
+RUN chgrp -R $NON_ROOT_USER storage bootstrap/cache
+RUN chmod -R ug+rwx storage bootstrap/cache
+COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
+
+
+
+# Start app
 EXPOSE 80
-
 COPY ./.deploy/entrypoint.sh /
 
 ENTRYPOINT ["sh", "/entrypoint.sh"]
