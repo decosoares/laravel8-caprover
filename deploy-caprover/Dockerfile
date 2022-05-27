@@ -36,7 +36,27 @@ RUN apk add --update --no-cache \
 
 # Configure & Install Extension
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+RUN docker-php-ext-configure \
+    opcache --enable-opcache &&\
+    docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
+    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql &&\
+    docker-php-ext-configure zip && \
+    docker-php-ext-install \
+    opcache \
+    mysqli \
+    pdo_pgsql \
+    pgsql \
+    pdo \
+    pdo_mysql \
+    sockets \
+    json \
+    intl \
+    gd \
+    xml \
+    bz2 \
+    pcntl \
+    bcmath \
+    exif
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
