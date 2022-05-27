@@ -23,12 +23,9 @@ RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
 USER application
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-# Optimizing Configuration loading
-RUN php artisan config:cache
-# Optimizing Route loading
-RUN php artisan route:cache
-# Optimizing View loading
-RUN php artisan view:cache
 
 EXPOSE 80
+
+COPY ./.deploy/entrypoint.sh /
+
+ENTRYPOINT ["sh", "/entrypoint.sh"]
