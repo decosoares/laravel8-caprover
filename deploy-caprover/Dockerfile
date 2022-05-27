@@ -10,6 +10,7 @@ COPY --chown=application:application ./ /var/www/
 COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
 
 # Install system dependencies
+USER root
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -30,7 +31,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
 COPY deploy-caprover/supervisor/start.sh /start.sh
-USER root
+
 RUN chmod +x /start.sh
 COPY deploy-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.conf
 COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
