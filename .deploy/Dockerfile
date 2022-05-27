@@ -55,7 +55,6 @@ RUN chmod -R 777 bootstrap/cache
 COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
 
-USER $NON_ROOT_USER
 # Start app
 EXPOSE 80
 COPY ./.deploy/entrypoint.sh /
