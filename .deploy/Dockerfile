@@ -12,7 +12,7 @@ USER application
 ENV WEB_DOCUMENT_ROOT /app/public
 ENV APP_ENV production
 WORKDIR /app
-COPY --chown=application:application ./ ./
+COPY --chown=application:application . .
 
 #Ajuste de permissões
 USER root
