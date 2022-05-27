@@ -35,24 +35,8 @@ RUN apk add --update --no-cache \
     libzip-dev
 
 # Configure & Install Extension
-RUN docker-php-ext-configure \
-    opcache --enable-opcache &&\
-    docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql &&\
-    docker-php-ext-configure zip && \
-    docker-php-ext-install \
-    pdo_pgsql \
-    pgsql \
-    pdo \
-    sockets \
-    json \
-    intl \
-    gd \
-    xml \
-    bz2 \
-    pcntl \
-    bcmath \
-    exif
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
