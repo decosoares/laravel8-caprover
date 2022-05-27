@@ -8,10 +8,18 @@ RUN install-php-extensions intl bcmath gd pdo_mysql pdo_pgsql opcache redis uuid
 # Copy Composer binary from the Composer official Docker image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+USER application
 ENV WEB_DOCUMENT_ROOT /app/public
 ENV APP_ENV production
 WORKDIR /app
-COPY ../. .
+COPY --chown=application:application ./ ./
+
+#Ajuste de permissões
+RUN usermod -a -G www-data application
+#RUN chown -R www-data:www-data /app
+RUN find /app -type f -exec chmod 644 '{}' \;
+RUN find /app -type d -exec chmod 755 '{}' \;
+RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 # Optimizing Configuration loading
@@ -21,4 +29,5 @@ RUN php artisan route:cache
 # Optimizing View loading
 RUN php artisan view:cache
 
-RUN chown -R application:application .
+USER application
+EXPOSE 80
