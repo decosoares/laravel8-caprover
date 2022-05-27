@@ -1,11 +1,11 @@
 :80 {
-    root * /srv/app/public
+    root * /app/public
 
     @websockets {
         header Connection *upgrade*
         header Upgrade    websocket
     }
-    reverse_proxy @websockets 127.0.0.1:6001 {
+    reverse_proxy @websockets 0.0.0.0:6001 {
         header_down -X-Powered-By
     }
 
@@ -16,7 +16,7 @@
         redir {path} 308
     }
 
-    php_fastcgi 127.0.0.1:9000
+    php_fastcgi 0.0.0.0:9000
     encode gzip
     header -X-Powered-By
     file_server
