@@ -27,7 +27,7 @@ RUN addgroup -S $NON_ROOT_GROUP && adduser -S $NON_ROOT_USER -G $NON_ROOT_GROUP
 RUN addgroup $NON_ROOT_USER wheel
 
 # Set working directory
-ENV LARAVEL_PATH=/app
+ENV LARAVEL_PATH=/srv/app
 WORKDIR $LARAVEL_PATH
 COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
 
