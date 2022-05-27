@@ -7,7 +7,7 @@ ENV PHP_DATE_TIMEZONE America/Maceio
 #ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /var/www		
 COPY --chown=application:application ./ /var/www/
-COPY docker-caprover/nginx/default.conf /etc/nginx/conf.d/
+COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -29,11 +29,11 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
-COPY docker-caprover/supervisor/start.sh /start.sh
+COPY deploy-caprover/supervisor/start.sh /start.sh
 USER root
 RUN chmod +x /start.sh
-COPY docker-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.conf
-COPY docker-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
+COPY deploy-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.conf
+COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
 #Ajuste de permissões
 RUN usermod -a -G www-data application
 #RUN chown -R www-data:www-data /app
