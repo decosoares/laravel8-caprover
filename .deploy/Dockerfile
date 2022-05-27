@@ -29,7 +29,7 @@ RUN addgroup $NON_ROOT_USER wheel
 # Set working directory
 ENV LARAVEL_PATH=/app
 WORKDIR $LARAVEL_PATH
-COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP ./ ./
+COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . $LARAVEL_PATH/
 
 USER root
 # Set cron job
