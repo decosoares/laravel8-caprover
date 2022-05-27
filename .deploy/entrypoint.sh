@@ -2,6 +2,7 @@
 
 echo "🎬 entrypoint.sh: [$(whoami)] [PHP $(php -r 'echo phpversion();')]"
 
+composer install --prefer-dist --no-scripts --no-dev --no-autoloader
 composer dump-autoload --no-interaction --no-dev --optimize
 
 echo "🎬 artisan commands"
