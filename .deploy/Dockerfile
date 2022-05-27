@@ -40,7 +40,9 @@ RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP /etc/crontabs/$NON_ROOT_USER && setc
 # Switch to non-root 'app' user & install app dependencies
 COPY composer.json composer.lock ./
 RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP $LARAVEL_PATH
+USER $NON_ROOT_USER
 RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
+USER root
 RUN rm -rf /home/$NON_ROOT_USER/.composer
 
 # Copy app
@@ -48,6 +50,8 @@ RUN find $LARAVEL_PATH -type f -exec chmod 644 {} \;
 RUN find $LARAVEL_PATH -type d -exec chmod 755 {} \;
 RUN chgrp -R $NON_ROOT_USER storage bootstrap/cache
 RUN chmod -R ug+rwx storage bootstrap/cache
+RUN chmod -R 777 storage
+RUN chmod -R 777 bootstrap/cache
 COPY ./.deploy/config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
 
