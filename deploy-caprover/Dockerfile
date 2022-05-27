@@ -11,7 +11,7 @@ COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
 
 # Install system dependencies
 USER root
-RUN apt-get update && apt-get install -y \
+RUN apk add --update --no-cache \
     git \
     curl \
     libpng-dev \
