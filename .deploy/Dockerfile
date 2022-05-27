@@ -21,7 +21,7 @@ COPY --from=composer/composer:2 /usr/bin/composer /usr/local/bin/composer
 FROM php-system-setup AS app-setup
 
 # Set working directory
-ENV LARAVEL_PATH=/srv/app
+ENV LARAVEL_PATH=/app
 WORKDIR $LARAVEL_PATH
 
 # Add non-root user: 'app'
@@ -35,6 +35,7 @@ COPY ./.deploy/config/crontab /etc/crontabs/$NON_ROOT_USER
 RUN chmod 777 /usr/sbin/crond
 RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP /etc/crontabs/$NON_ROOT_USER && setcap cap_setgid=ep /usr/sbin/crond
 
+COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP ./ ./
 # Switch to non-root 'app' user & install app dependencies
 COPY composer.json composer.lock ./
 RUN chown -R $NON_ROOT_USER:$NON_ROOT_GROUP $LARAVEL_PATH
@@ -43,7 +44,6 @@ RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader
 RUN rm -rf /home/$NON_ROOT_USER/.composer
 
 # Copy app
-COPY --chown=$NON_ROOT_USER:$NON_ROOT_GROUP . .
 RUN find $LARAVEL_PATH -type f -exec chmod 644 {} \;
 RUN find $LARAVEL_PATH -type d -exec chmod 755 {} \;
 RUN chgrp -R $NON_ROOT_USER storage bootstrap/cache
