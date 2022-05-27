@@ -41,7 +41,6 @@ RUN docker-php-ext-configure \
     docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql &&\
     docker-php-ext-configure zip && \
     docker-php-ext-install \
-    opcache \
     pdo_pgsql \
     pgsql \
     pdo \
