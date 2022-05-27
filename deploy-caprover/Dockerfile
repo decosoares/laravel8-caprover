@@ -11,20 +11,49 @@ COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
 
 # Install system dependencies
 USER root
-RUN apk add --update --no-cache \
-    git \
-    curl \
+# Add Build Dependencies
+RUN apk update && apk add --no-cache --virtual .build-deps  \
+    zlib-dev \
+    libjpeg-turbo-dev \
     libpng-dev \
-    libonig-dev \
     libxml2-dev \
-    zip \
-    unzip
+    bzip2-dev \
+    postgresql-dev \ 
+    zip 
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+# Add Production Dependencies
+RUN apk add --update --no-cache \
+    jpegoptim \
+    pngquant \
+    optipng \
+    supervisor \
+    nano \
+    icu-dev \
+    freetype-dev \
+    mysql-client \ 
+    libzip-dev
+
+# Configure & Install Extension
+RUN docker-php-ext-configure \
+    opcache --enable-opcache &&\
+    docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
+    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql &&\
+    docker-php-ext-configure zip && \
+    docker-php-ext-install \
+    opcache \
+    pdo_pgsql \
+    pgsql \
+    pdo \
+    sockets \
+    json \
+    intl \
+    gd \
+    xml \
+    bz2 \
+    pcntl \
+    bcmath \
+    exif
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
