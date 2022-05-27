@@ -15,12 +15,14 @@ WORKDIR /app
 COPY --chown=application:application ./ ./
 
 #Ajuste de permissões
+USER root
 RUN usermod -a -G www-data application
 #RUN chown -R www-data:www-data /app
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
+USER application
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 # Optimizing Configuration loading
 RUN php artisan config:cache
@@ -29,5 +31,4 @@ RUN php artisan route:cache
 # Optimizing View loading
 RUN php artisan view:cache
 
-USER application
 EXPOSE 80
