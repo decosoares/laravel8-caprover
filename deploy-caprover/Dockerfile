@@ -7,7 +7,7 @@ ENV PHP_DATE_TIMEZONE America/Maceio
 #ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /var/www		
 COPY --chown=application:application ./ /var/www/
-COPY /etc/nginx/conf.d/
+COPY ./nginx /etc/nginx/conf.d/
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
