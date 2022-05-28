@@ -30,10 +30,6 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
-COPY deploy-caprover/supervisor/start.sh /start.sh
-
-RUN chmod +x /start.sh
 COPY deploy-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.conf
 COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
 
@@ -43,19 +39,14 @@ RUN chown -R www-data:www-data /app
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
-USER application
 
-#instalar dependências da aplicação via composer
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-#gerar variável app key
-RUN php artisan key:generate
-# Optimizing Route loading
-RUN php artisan route:cache
-# Optimizing View loading
-RUN php artisan view:cache
-#atualização da base de dados
-RUN php artisan migrate --force
+# comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
+COPY deploy-caprover/supervisor/start.sh ./
+
+RUN chmod +x ./start.sh
+
+USER application
 
 EXPOSE 80
 
-#CMD ["start"]
+CMD ["start"]
