@@ -38,7 +38,8 @@ COPY deploy-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.co
 COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
 #Ajuste de permissões
 RUN usermod -a -G www-data application
-#RUN chown -R www-data:www-data /app
+RUN chown www-data:www-data /var/www
+RUN chmod 744 /var/www
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
