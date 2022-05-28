@@ -4,10 +4,10 @@ FROM webdevops/php-nginx:8.0
 USER application
 ENV APP_ENV laravel
 ENV PHP_DATE_TIMEZONE America/Maceio
-#ENV WEB_DOCUMENT_ROOT /app/public
-WORKDIR /var/www		
-COPY --chown=application:application ./ /var/www/
-COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
+ENV WEB_DOCUMENT_ROOT /app/public
+WORKDIR /app		
+COPY --chown=application:application ./ ./
+#COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
 # Install system dependencies
 USER root
