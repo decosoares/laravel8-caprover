@@ -41,12 +41,12 @@ RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
-COPY deploy-caprover/supervisor/start.sh ./
+COPY deploy-caprover/supervisor/start.sh /
 
-RUN chmod +x start.sh
+RUN chmod +x /start.sh
 
 USER application
 
 EXPOSE 80
 
-CMD ["start"]
+ENTRYPOINT ["sh","/start.sh"]
