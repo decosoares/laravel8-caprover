@@ -44,6 +44,18 @@ RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 USER application
+
+#instalar dependências da aplicação via composer
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+#gerar variável app key
+RUN php artisan key:generate
+# Optimizing Route loading
+RUN php artisan route:cache
+# Optimizing View loading
+RUN php artisan view:cache
+#atualização da base de dados
+RUN php artisan migrate --force
+
 EXPOSE 80
 
 #CMD ["start"]
