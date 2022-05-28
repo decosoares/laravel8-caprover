@@ -7,7 +7,7 @@ ENV PHP_DATE_TIMEZONE America/Maceio
 #ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /var/www		
 COPY --chown=application:application ./ /var/www/
-COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
+COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/
 
 # Install system dependencies
 USER root
