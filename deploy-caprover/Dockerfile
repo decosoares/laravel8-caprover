@@ -7,7 +7,7 @@ ENV PHP_DATE_TIMEZONE America/Maceio
 ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /app		
 COPY --chown=application:application ./ ./
-COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
+#COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
 # Install system dependencies
 USER root
@@ -38,7 +38,7 @@ COPY deploy-caprover/supervisor/start.conf /opt/docker/etc/supervisor.d/start.co
 COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.conf
 #Ajuste de permissões
 RUN usermod -a -G www-data application
-#RUN chown -R www-data:www-data /app
+RUN chown -R www-data:www-data /app
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
