@@ -43,7 +43,7 @@ RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstr
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
 COPY deploy-caprover/supervisor/start.sh ./
 
-RUN chmod +x ./start.sh
+RUN chmod +x start.sh
 
 USER application
 
