@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:8.0-alpine
+FROM webdevops/php-nginx:8.0
 
 #aplicação laravel
 USER application
@@ -11,52 +11,21 @@ COPY deploy-caprover/nginx/default.conf /etc/nginx/conf.d/
 
 # Install system dependencies
 USER root
-# Add Build Dependencies
-RUN apk update && apk add --no-cache --virtual .build-deps  \
-    zlib-dev \
-    libjpeg-turbo-dev \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
     libpng-dev \
+    libonig-dev \
     libxml2-dev \
-    bzip2-dev \
-    postgresql-dev \ 
-    zip 
+    zip \
+    unzip
 
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add Production Dependencies
-RUN apk add --update --no-cache \
-    jpegoptim \
-    pngquant \
-    optipng \
-    supervisor \
-    nano \
-    icu-dev \
-    freetype-dev \
-    mysql-client \ 
-    libzip-dev
-
-# Configure & Install Extension
 # Install PHP extensions
-RUN docker-php-ext-configure \
-    opcache --enable-opcache &&\
-    docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql &&\
-    docker-php-ext-configure zip && \
-    docker-php-ext-install \
-    opcache \
-    mysqli \
-    pdo_pgsql \
-    pgsql \
-    pdo \
-    pdo_mysql \
-    sockets \
-    json \
-    intl \
-    gd \
-    xml \
-    bz2 \
-    pcntl \
-    bcmath \
-    exif
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
