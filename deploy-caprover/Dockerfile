@@ -53,4 +53,4 @@ USER application
 
 EXPOSE 80
 
-CMD ["/start.sh"]
+#CMD ["/start.sh"]
