@@ -9,7 +9,7 @@ WORKDIR /app
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
 COPY deploy-caprover/supervisor/start.sh /
 COPY --chown=application:application ./ ./
-RUN chmod +x start.sh
+#RUN chmod +x start.sh
 
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
