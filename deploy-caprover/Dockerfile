@@ -46,7 +46,7 @@ COPY deploy-caprover/supervisor/start.sh /
 RUN chmod +x /start.sh
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN php artisan key:generate
+#RUN php artisan key:generate
 RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan migrate --force
