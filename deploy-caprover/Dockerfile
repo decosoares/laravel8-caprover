@@ -54,4 +54,4 @@ USER application
 
 EXPOSE 80
 
-CMD start.sh
+ENTRYPOINT ["sh", "start.sh"]
