@@ -1,6 +1,6 @@
 #!/bin/bash
 #Ajuste de permissões
-usermod -a -G www-data application
+#usermod -a -G www-data application
 #find /app -type f -exec chmod 644 '{}' \;
 #find /app -type d -exec chmod 755 '{}' \;
 #chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
