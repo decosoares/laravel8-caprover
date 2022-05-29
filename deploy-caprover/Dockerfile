@@ -49,7 +49,7 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 #RUN php artisan key:generate
 RUN php artisan route:cache
 RUN php artisan view:cache
-RUN php artisan migrate --force
+#RUN php artisan migrate --force
 
 USER application
 
