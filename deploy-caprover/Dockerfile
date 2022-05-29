@@ -10,7 +10,8 @@ WORKDIR /app
 COPY ./deploy-caprover/supervisor/start.sh ./
 COPY --chown=application:application ./ ./
 USER root
-RUN chmod +x start.sh
+RUN ls -la
+RUN chmod +x /start.sh
 
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
@@ -53,4 +54,4 @@ USER application
 
 EXPOSE 80
 
-#CMD ["/start.sh"]
+CMD ["/start.sh"]
