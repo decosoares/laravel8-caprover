@@ -7,6 +7,7 @@ chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/c
 
 #instalar dependências da aplicação via composer
 cd /app && composer install --no-interaction --optimize-autoloader --no-dev && \
+cp .env.example .env && \
 #gerar variável app key
 php artisan key:generate && \
 # Optimizing Route loading
