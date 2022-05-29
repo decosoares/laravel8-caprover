@@ -45,8 +45,14 @@ COPY deploy-caprover/supervisor/start.sh /
 
 RUN chmod +x /start.sh
 
-#USER application
+RUN cd /app && composer install --no-interaction --optimize-autoloader --no-dev && \
+	php artisan key:generate && \
+	php artisan route:cache && \
+	php artisan view:cache && \
+	php artisan migrate --force
+
+USER application
 
 EXPOSE 80
 
-ENTRYPOINT ["sh","/start.sh"]
+#ENTRYPOINT ["sh","/start.sh"]
