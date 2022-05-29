@@ -6,6 +6,10 @@ ENV APP_ENV laravel
 ENV PHP_DATE_TIMEZONE America/Maceio
 ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /app		
+# comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
+COPY deploy-caprover/supervisor/start.sh /
+RUN chmod +x /start.sh
+
 COPY --chown=application:application ./ ./
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
@@ -39,11 +43,6 @@ RUN chown -R www-data:www-data /app
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
-
-# comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
-COPY deploy-caprover/supervisor/start.sh /
-
-RUN chmod +x /start.sh
 
 #RUN composer install --no-interaction --optimize-autoloader --no-dev
 #RUN php artisan key:generate
