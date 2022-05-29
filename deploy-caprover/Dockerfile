@@ -9,7 +9,7 @@ WORKDIR /app
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
 COPY deploy-caprover/supervisor/start.sh /
 COPY --chown=application:application ./ ./
-#RUN chmod +x start.sh
+RUN chmod +x /start.sh
 
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
@@ -39,7 +39,7 @@ COPY deploy-caprover/supervisor/queue.conf /opt/docker/etc/supervisor.d/queue.co
 
 #Ajuste de permissões
 RUN usermod -aG www-data application
-RUN chown -R www-data:www-data /app
+RUN chown -R application:www-data /app
 RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
