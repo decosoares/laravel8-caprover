@@ -1,5 +1,4 @@
-ARG PHP_VERSION=${PHP_VERSION:-8.0}
-FROM php:${PHP_VERSION}-fpm-alpine AS php-system-setup
+FROM webdevops/php-nginx:8.0-alpine AS php-system-setup
 
 # Install system dependencies
 RUN apk add --no-cache dcron busybox-suid libcap curl zip unzip git
@@ -10,10 +9,6 @@ RUN install-php-extensions intl bcmath gd pdo_mysql pdo_pgsql opcache redis uuid
 
 # Install supervisord implementation
 COPY --from=ochinchina/supervisord:latest /usr/local/bin/supervisord /usr/local/bin/supervisord
-
-# Install caddy
-COPY --from=caddy:2.2.1 /usr/bin/caddy /usr/local/bin/caddy
-RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy
 
 # Install composer
 COPY --from=composer/composer:2 /usr/bin/composer /usr/local/bin/composer
