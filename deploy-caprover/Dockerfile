@@ -44,14 +44,16 @@ RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
-#RUN composer install --no-interaction --optimize-autoloader --no-dev
-#RUN php artisan key:generate
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN php artisan key:generate
 #RUN php artisan route:cache
 #RUN php artisan view:cache
 #RUN php artisan migrate --force
+
+RUN cp .env.example .env
 
 USER application
 
 EXPOSE 80
 
-ENTRYPOINT ["sh", "start.sh"]
+#ENTRYPOINT ["sh", "start.sh"]
