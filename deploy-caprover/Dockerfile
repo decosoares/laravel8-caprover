@@ -11,7 +11,7 @@ COPY ./deploy-caprover/supervisor/start.sh ./
 COPY --chown=application:application ./ ./
 USER root
 RUN ls -la
-RUN chmod +x /start.sh
+RUN chmod +x start.sh
 
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
