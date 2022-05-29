@@ -15,6 +15,6 @@ php artisan route:cache && \
 # Optimizing View loading
 php artisan view:cache && \
 #atualização da base de dados
-php artisan migrate --force && \
+php artisan migrate --force
 #inicialização do serviço de fila via supervisor
 #supervisorctl start queue:
