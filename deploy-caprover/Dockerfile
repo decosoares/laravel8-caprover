@@ -7,10 +7,10 @@ ENV PHP_DATE_TIMEZONE America/Maceio
 ENV WEB_DOCUMENT_ROOT /app/public
 WORKDIR /app		
 # comandos composer, php artisan e iniciar serviço de fila com script start.sh via supervisord
-COPY deploy-caprover/supervisor/start.sh /
+COPY ./deploy-caprover/supervisor/start.sh ./
 COPY --chown=application:application ./ ./
 USER root
-RUN chmod +x /start.sh
+RUN chmod +x start.sh
 
 #COPY deploy-caprover/nginx/default.conf /opt/docker/etc/nginx/conf.d/
 
