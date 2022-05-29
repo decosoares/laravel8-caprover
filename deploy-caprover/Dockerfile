@@ -45,7 +45,7 @@ COPY deploy-caprover/supervisor/start.sh /
 
 RUN chmod +x /start.sh
 
-RUN mv .env .env
+RUN mv ./.env ./
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN php artisan key:generate
