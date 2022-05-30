@@ -87,7 +87,7 @@ ARG PUSHER_APP_KEY=${PUSHER_APP_KEY}
 ARG PUSHER_APP_SECRET=${PUSHER_APP_SECRET}
 ARG PUSHER_APP_CLUSTER=${PUSHER_APP_CLUSTER}
 
-RUN php artisan key:generate
+#RUN php artisan key:generate
 #RUN php artisan route:cache
 #RUN php artisan view:cache
 #RUN php artisan migrate --force
@@ -96,4 +96,4 @@ USER application
 
 EXPOSE 80
 
-#ENTRYPOINT ["sh", "start.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
