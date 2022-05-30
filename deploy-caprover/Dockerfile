@@ -45,7 +45,7 @@ RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN cp .env.example .env
+RUN cp .env.production .env
 RUN php artisan key:generate
 #RUN php artisan route:cache
 #RUN php artisan view:cache
