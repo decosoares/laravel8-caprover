@@ -44,7 +44,7 @@ RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+#RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Set any ENVs
 ARG APP_KEY=${APP_KEY}
@@ -95,5 +95,5 @@ ARG PUSHER_APP_CLUSTER=${PUSHER_APP_CLUSTER}
 USER application
 
 EXPOSE 80
-
+COPY ./deploy-caprover/entrypoint.sh /
 ENTRYPOINT ["sh", "/entrypoint.sh"]
