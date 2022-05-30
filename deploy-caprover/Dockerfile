@@ -44,9 +44,10 @@ RUN find /app -type f -exec chmod 644 '{}' \;
 RUN find /app -type d -exec chmod 755 '{}' \;
 RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache
 
-#RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-#RUN php artisan key:generate
+RUN cp .env.example .env
+RUN php artisan key:generate
 #RUN php artisan route:cache
 #RUN php artisan view:cache
 #RUN php artisan migrate --force
@@ -54,5 +55,3 @@ RUN chgrp -R www-data storage bootstrap/cache && chmod -R ug+rwx storage bootstr
 USER application
 
 EXPOSE 80
-COPY ./deploy-caprover/entrypoint.sh /
-ENTRYPOINT ["sh", "/entrypoint.sh"]
